@@ -1,0 +1,4 @@
+aiogram==2.23.1
+python-dotenv==0.15.0
+asyncpg --no-binary :all
+pillow --no-binary :all
