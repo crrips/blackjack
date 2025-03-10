@@ -1,8 +1,8 @@
 from aiogram.dispatcher import FSMContext
+from .game import card_sum, CARDS
 from .game import game_process
 from bot import dp, PlayState
 from .game_actions import *
-from .game import card_sum
 from aiogram import types
 from pathlib import Path
 from app import conn_db
@@ -85,6 +85,7 @@ async def game(message: types.Message, state: FSMContext):
     await PlayState.game.set()
     await state.update_data(game_result='playing')
     await state.update_data(game_id=game_id)
+    await state.update_data(cards=CARDS)
     await game_process(message, state)
     
     

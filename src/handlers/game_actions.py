@@ -18,9 +18,23 @@ async def dealer_logic(dealer_cards, state):
     from .game import CARDS
     from .game import card_sum
     
-    while card_sum(dealer_cards) < 17:
-        dealer_cards.append(random.choice(list(CARDS.keys())))
+    data = await state.get_data()
+    cards = data['cards']
+    
+    new_cards = []
+    
+    while card_sum(dealer_cards) + card_sum(new_cards) < 17:
+        new_cards.append(random.choice(list(cards.keys())))
+        # dealer_cards.append(random.choice(list(cards.keys())))
+        # await state.update_data(dealer_cards=dealer_cards)
+        
+    while new_cards:
+        dealer_cards.append(new_cards.pop())
         await state.update_data(dealer_cards=dealer_cards)
+        
+    for card in new_cards:
+        cards.pop(card)
+    await state.update_data(cards=cards)
 
 
 @dp.message_handler(commands=['hit'], state=PlayState.game)
@@ -32,9 +46,10 @@ async def hit(message: types.Message, state: FSMContext):
     data = await state.get_data()
     player_cards = data['player_cards']
     dealer_cards = data['dealer_cards']
+    cards = data['cards']
     game_id = data['game_id']
     
-    player_cards.append(random.choice(list(CARDS.keys())))
+    player_cards.append(random.choice(list(cards.keys())))
     
     conn = await conn_db()
     
@@ -47,6 +62,7 @@ async def hit(message: types.Message, state: FSMContext):
     await conn.close()
     
     await state.update_data(player_cards=player_cards)
+    await state.update_data(cards=cards)
     
     if await process_logic(message, player_cards, dealer_cards, state):
         await go_to_the_end(message, state)

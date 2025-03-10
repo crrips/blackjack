@@ -127,9 +127,18 @@ async def final_logic(message, player_cards, dealer_cards, state):
 
 @dp.message_handler(commands=['begin_game'])
 async def game_process(message: types.Message, state: FSMContext):
-    player_cards = [random.choice(list(CARDS.keys())), random.choice(list(CARDS.keys()))]
-    dealer_cards = [random.choice(list(CARDS.keys())), random.choice(list(CARDS.keys()))]
     
+    data = await state.get_data()
+    cards = data['cards']
+  
+    player_cards = [random.choice(list(cards.keys())), random.choice(list(cards.keys()))]
+    for card in player_cards:
+        cards.pop(card)
+        
+    dealer_cards = [random.choice(list(cards.keys())), random.choice(list(cards.keys()))]
+    for card in dealer_cards:
+        cards.pop(card)  
+        
     data = await state.get_data()
     game_id = data['game_id']
     
@@ -148,3 +157,5 @@ async def game_process(message: types.Message, state: FSMContext):
     
     await message.answer("Выберите действие", reply_markup=actions)
     await state.update_data(player_cards=player_cards, dealer_cards=dealer_cards)
+    await state.update_data(cards=cards)
+    
