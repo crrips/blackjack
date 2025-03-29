@@ -4,7 +4,7 @@ This Telegram bot lets you play the classic card game Blackjack directly in the 
 
 ## 🚀 Launch
 
-Firstly, create a .env file and set the values
+Firstly, create an .env file and set the values
 ```
 TOKEN = ""
 DB_NAME = ""
@@ -38,7 +38,7 @@ docker-compose up --build
 
 ## 📜 Game Rules
 
-Blackjack is a card game with the goal of getting a total card value as close to 21 as possible without exceeding it.
+Blackjack is a card game to get a total card value as close to 21 as possible without exceeding it.
 
 Basic Rules:
 
@@ -65,4 +65,4 @@ If the total exceeds 21, the player loses.
 
 ## 📩 Feedback
 
-If you have any suggestions or find any issues, feel free to contact me.
+Feel free to contact me if you have any suggestions or issues.
